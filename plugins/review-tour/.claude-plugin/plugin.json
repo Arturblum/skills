@@ -1,0 +1,7 @@
+{
+  "name": "review-tour",
+  "description": "Review a code change in the order it runs: a guided CodeTour in VS Code with real diffs, one highlighted block per step.",
+  "version": "1.0.0",
+  "author": { "name": "Arturblum" },
+  "license": "MIT"
+}

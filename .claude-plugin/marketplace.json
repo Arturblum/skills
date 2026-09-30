@@ -1,0 +1,14 @@
+{
+  "name": "arturblum-skills",
+  "description": "Claude Code skills by Arturblum.",
+  "owner": {
+    "name": "Arturblum"
+  },
+  "plugins": [
+    {
+      "name": "review-tour",
+      "source": "./plugins/review-tour",
+      "description": "Review a code change in the order it runs: a guided CodeTour in VS Code with real diffs, one highlighted block per step."
+    }
+  ]
+}
