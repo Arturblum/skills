@@ -32,22 +32,31 @@ A change is easiest to review in the order it **runs**, not in the order its fil
 Run the skill in a repository, and it will:
 
 1. **Ask what to review**: only the **last commit**, or **all changes on the branch** compared to
-   `main`, committed or not.
+   `main`, committed or not. It also asks **how deep** the tour should go:
+   - **1 (low)**: only the main flow, with a few sentences per step;
+   - **2 (medium)**, the default: the whole flow, plus tests, configuration and docs;
+   - **3 (high)**: every changed block, with the full reasoning, the alternatives considered and
+     the edge cases.
 2. **Make a review copy** of the repository: a git worktree at the base branch, with the change
    applied as uncommitted edits. VS Code then shows the change as real diffs. Your branch, its
    commits and its remote are not touched.
-3. **Read the change** and work out the order it runs in: where it starts, how it's wired, the
+3. **Gather the context**: why the change was made. It reads the issue, the pull request, the
+   commit messages and the docs. If Claude wrote the change in the same conversation, it also uses
+   what it remembers from writing it.
+4. **Read the change** and work out the order it runs in: where it starts, how it's wired, the
    flow itself, the failure paths, then tests, configuration and docs.
-4. **Write a [CodeTour](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour)**
-   in that order. Each step:
+5. **Write a [CodeTour](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour)**
+   in that order. It opens with the problem, the approach and where to look hardest. Then each
+   step:
    - highlights exactly one block, so you know where to stop reading;
+   - explains in plain words **why** the block exists and why it was written this way;
    - says whether the file is 🟢 new or 🔵 modified;
    - links to that file's side-by-side diff;
    - ends with **Check:**, the one thing there most worth your judgement.
-5. **Update the tour** when the code changes: run the skill again and ask for an update. It
+6. **Update the tour** when the code changes: run the skill again and ask for an update. It
    moves each step to where its code is now, and tells Claude which steps changed, which code is
-   new and which is gone, so only those are rewritten.
-6. **Clean up** when you're done.
+   new and which is gone, so only those are rewritten. You can also ask for a different depth.
+7. **Clean up** when you're done.
 
 ### Requirements
 
