@@ -1,0 +1,9 @@
+{
+  "name": "flow-diff",
+  "description": "Draw a before/after flow diff of a design change as swimlane diagrams: new, changed, removed and unchanged parts in colour, every arrow labelled and numbered, every box explained.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Arturblum"
+  },
+  "license": "MIT"
+}

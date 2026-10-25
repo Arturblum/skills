@@ -9,6 +9,11 @@
       "name": "review-tour",
       "source": "./plugins/review-tour",
       "description": "Review a code change in the order it runs: a guided CodeTour in VS Code with real diffs, one highlighted block per step."
+    },
+    {
+      "name": "flow-diff",
+      "source": "./plugins/flow-diff",
+      "description": "Draw a before/after flow diff of a design change as swimlane diagrams: new, changed, removed and unchanged parts in colour, every arrow labelled and numbered, every box explained."
     }
   ]
 }

@@ -1,0 +1,320 @@
+<title>Notify Node Flow Diff</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+/* Layout concept: a code-review style page. Two swimlane diagrams (before, after) in diff colours, each followed by a numbered step list that matches the numbers on the arrows. */
+:root {
+  --bg: #f6f6f2;
+  --panel: #ffffff;
+  --fg: #1d2220;
+  --muted: #5a625d;
+  --line: #cfd3cc;
+  --lane: #eeeee9;
+  --new-bg: #e1f2e5; --new-bd: #2c8748; --new-fg: #124a27;
+  --chg-bg: #faeecf; --chg-bd: #b0801a; --chg-fg: #5a3d06;
+  --rm-bg: #fbe3df; --rm-bd: #c0392b; --rm-fg: #6c1c13;
+  --same-bg: #e9eae6; --same-bd: #868c86; --same-fg: #333935;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131619; --panel: #1b1f23; --fg: #e6e9e5; --muted: #98a19a; --line: #394039; --lane: #181c1f;
+    --new-bg: #15301f; --new-bd: #4fb36f; --new-fg: #bde7ca;
+    --chg-bg: #34280c; --chg-bd: #d6a02c; --chg-fg: #f0d9a3;
+    --rm-bg: #3a1713; --rm-bd: #e0695a; --rm-fg: #f4c4bd;
+    --same-bg: #23282a; --same-bd: #7d867f; --same-fg: #d2d7d3;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131619; --panel: #1b1f23; --fg: #e6e9e5; --muted: #98a19a; --line: #394039; --lane: #181c1f;
+  --new-bg: #15301f; --new-bd: #4fb36f; --new-fg: #bde7ca;
+  --chg-bg: #34280c; --chg-bd: #d6a02c; --chg-fg: #f0d9a3;
+  --rm-bg: #3a1713; --rm-bd: #e0695a; --rm-fg: #f4c4bd;
+  --same-bg: #23282a; --same-bd: #7d867f; --same-fg: #d2d7d3;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.6; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 1240px; margin: 0 auto; }
+h1 { font-size: 26px; font-weight: 500; margin: 0 0 6px; text-wrap: balance; }
+h2 { font-size: 20px; font-weight: 500; margin: 44px 0 6px; text-wrap: balance; }
+p { margin: 0 0 12px; max-width: 70ch; color: var(--muted); }
+code { font-family: var(--font-mono); font-size: 0.9em; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 16px 0 0; padding: 0; list-style: none; font-size: 13px; }
+.legend li { display: flex; align-items: center; gap: 8px; }
+.sw { width: 18px; height: 14px; border-radius: 3px; border: 1.5px solid; }
+.sw.new { background: var(--new-bg); border-color: var(--new-bd); }
+.sw.chg { background: var(--chg-bg); border-color: var(--chg-bd); }
+.sw.rm { background: var(--rm-bg); border-color: var(--rm-bd); border-style: dashed; }
+.sw.same { background: var(--same-bg); border-color: var(--same-bd); }
+.diagram { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); padding: 8px; }
+.diagram svg { display: block; width: 100%; min-width: 980px; height: auto; }
+.lane { fill: var(--lane); }
+.lane-title { font: 500 14px var(--font-body); fill: var(--fg); text-anchor: middle; }
+.nd rect { stroke-width: 1.5; rx: 6; }
+.nd .t { font: 500 14px var(--font-body); }
+.nd .b { font: 400 12px var(--font-body); }
+.nd.new rect { fill: var(--new-bg); stroke: var(--new-bd); } .nd.new text { fill: var(--new-fg); }
+.nd.chg rect { fill: var(--chg-bg); stroke: var(--chg-bd); } .nd.chg text { fill: var(--chg-fg); }
+.nd.rm rect { fill: var(--rm-bg); stroke: var(--rm-bd); stroke-dasharray: 5 4; } .nd.rm text { fill: var(--rm-fg); }
+.nd.same rect { fill: var(--same-bg); stroke: var(--same-bd); } .nd.same text { fill: var(--same-fg); }
+.nd.note rect { fill: var(--panel); stroke: var(--same-bd); stroke-dasharray: 2 4; } .nd.note text { fill: var(--muted); }
+.ed { fill: none; stroke-width: 1.8; }
+.ed.new { stroke: var(--new-bd); } .ed.same { stroke: var(--same-bd); } .ed.rm { stroke: var(--rm-bd); stroke-dasharray: 6 4; }
+.pl rect.box { fill: var(--panel); stroke-width: 1.2; }
+.pl.new rect.box, .pl.new circle { stroke: var(--new-bd); } .pl.same rect.box, .pl.same circle { stroke: var(--same-bd); } .pl.rm rect.box, .pl.rm circle { stroke: var(--rm-bd); }
+.pl circle { fill: var(--panel); stroke-width: 1.5; }
+.pl .n { font: 500 11px var(--font-body); text-anchor: middle; fill: var(--fg); }
+.pl .l { font: 400 12px var(--font-body); fill: var(--fg); }
+ol.steps { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 10px; counter-reset: s; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; max-width: 90ch; }
+ol.steps li::before { content: attr(data-n); width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--same-bd); display: grid; place-items: center; font-size: 12px; font-weight: 500; }
+ol.steps.new li::before { border-color: var(--new-bd); } ol.steps.rm li::before { border-color: var(--rm-bd); }
+ol.steps li div { min-width: 0; }
+.confirm { margin: 18px 0 0; padding: 16px 18px; border: 1px solid var(--chg-bd); background: var(--chg-bg); color: var(--chg-fg); border-radius: 8px; max-width: 90ch; }
+.confirm h3 { margin: 0 0 8px; font-size: 16px; font-weight: 500; }
+.confirm ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.hint { font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+</style>
+
+<main>
+  <h1>Notify node: before and after</h1>
+  <p>How a message to a team is approved and sent in the water workflow today, and how it would work after ticket #269. Read each diagram top to bottom; the numbers on the arrows match the numbered steps underneath.</p>
+  <ul class="legend" aria-label="Legend">
+    <li><span class="sw new"></span>new</li>
+    <li><span class="sw chg"></span>changed</li>
+    <li><span class="sw rm"></span>removed (dashed)</li>
+    <li><span class="sw same"></span>unchanged</li>
+  </ul>
+
+  <h2>Before: a Task with a WhatsApp approval form</h2>
+  <p>Approval is a form on a Task. The send happens on the side, and the run never finds out what became of the message.</p>
+  <div class="diagram"><svg id="before" role="img" aria-label="Before: Task node, task service, approval panel, send gate, task answer hand-over, queued send command, Notifications verifying and sending. The run never sees delivery."></svg></div>
+  <p class="hint">On a narrow screen the diagram scrolls sideways inside its frame.</p>
+  <ol class="steps rm" id="before-steps"></ol>
+
+  <h2>After: the Notify node</h2>
+  <p>Approval is Notify's own step. The run sends the message itself and waits for Notifications to report whether it was delivered.</p>
+  <div class="diagram"><svg id="after" role="img" aria-label="After: Notify node proposes to the send gate; automatic or dispatcher approval; decision answers the run; the run sends through Notifications and waits for a completion event reporting sent or failed."></svg></div>
+  <p class="hint">On a narrow screen the diagram scrolls sideways inside its frame.</p>
+  <ol class="steps new" id="after-steps"></ol>
+
+  <div class="confirm">
+    <h3>Assumptions to confirm</h3>
+    <ul>
+      <li>The message text is filled from the incident when it is proposed, because Notifications checks the sent text against the approved text. ADR 0062 says "when sent", so this needs a note or a new ADR.</li>
+      <li><code>sendMessage</code> deduplicates on the body <code>id</code> today, while ADR 0095 puts the Idempotency Key in a header. I would make the two the same value.</li>
+      <li>A role maps to its team's field-app group through configuration until #378 builds real roles.</li>
+      <li>The Dispatcher approval step is frontend work the ticket does not name.</li>
+      <li>A failed send is recorded and the path continues (the ticket's acceptance criterion), which differs from #453's default of ending the run.</li>
+    </ul>
+  </div>
+</main>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var W = 190, G = 170, M = 15, TOP = 56, ROWGAP = 96, CH = 27;
+  var LANES = ['Workflow run', 'ControlCenter', 'Dispatcher', 'Notifications'];
+  var colX = function (c) { return M + c * (W + G); };
+
+  function el(name, attrs, parent, text) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text !== undefined) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function wrap(t, max) {
+    var words = t.split(' '), lines = [], cur = '';
+    words.forEach(function (w) {
+      if ((cur + ' ' + w).trim().length > max) { lines.push(cur); cur = w; } else cur = (cur + ' ' + w).trim();
+    });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+
+  function render(svgId, spec) {
+    var svg = document.getElementById(svgId);
+    var nodes = {};
+    var y = TOP;
+    spec.rows.forEach(function (row) {
+      var prepared = row.map(function (n) {
+        var lines = wrap(n.text, CH);
+        return { n: n, lines: lines, h: 44 + 16 * lines.length };
+      });
+      var rowH = Math.max.apply(null, prepared.map(function (p) { return p.h; }));
+      prepared.forEach(function (p) {
+        nodes[p.n.id] = { id: p.n.id, x: colX(p.n.col), y: y, w: W, h: rowH, kind: p.n.kind, title: p.n.title, lines: p.lines };
+      });
+      y += rowH + ROWGAP;
+    });
+    var bottom = y - ROWGAP + 30;
+    var totalW = colX(3) + W + M;
+    svg.setAttribute('viewBox', '0 0 ' + totalW + ' ' + bottom);
+
+    el('defs', {}, svg).innerHTML =
+      '<marker id="ar-' + svgId + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>';
+
+    LANES.forEach(function (name, c) {
+      el('rect', { class: 'lane', x: colX(c) - 8, y: 36, width: W + 16, height: bottom - 40, rx: 8 }, svg);
+      el('text', { class: 'lane-title', x: colX(c) + W / 2, y: 26 }, svg, name);
+    });
+
+    function anchor(ref) {
+      var parts = ref.split('.'), n = nodes[parts[0]], s = parts[1];
+      if (s === 't') return { x: n.x + n.w / 2, y: n.y, s: s };
+      if (s === 'b') return { x: n.x + n.w / 2, y: n.y + n.h, s: s };
+      if (s === 'l') return { x: n.x, y: n.y + n.h / 2, s: s };
+      return { x: n.x + n.w, y: n.y + n.h / 2, s: s };
+    }
+    var horiz = function (s) { return s === 'l' || s === 'r'; };
+    function route(p, q) {
+      var pts;
+      if (horiz(p.s) && horiz(q.s)) {
+        if (Math.abs(p.y - q.y) < 1) pts = [p, q];
+        else { var mx = (p.x + q.x) / 2; pts = [p, { x: mx, y: p.y }, { x: mx, y: q.y }, q]; }
+      } else if (!horiz(p.s) && !horiz(q.s)) {
+        if (Math.abs(p.x - q.x) < 1) pts = [p, q];
+        else { var my = (p.y + q.y) / 2; pts = [p, { x: p.x, y: my }, { x: q.x, y: my }, q]; }
+      } else if (horiz(p.s)) pts = [p, { x: q.x, y: p.y }, q];
+      else pts = [p, { x: p.x, y: q.y }, q];
+      return pts;
+    }
+
+    var edgeLayer = el('g', {}, svg), nodeLayer = el('g', {}, svg), pillLayer = el('g', {}, svg);
+
+    spec.nodes = null;
+    Object.keys(nodes).forEach(function (id) {
+      var n = nodes[id];
+      var g = el('g', { class: 'nd ' + n.kind }, nodeLayer);
+      el('rect', { x: n.x, y: n.y, width: n.w, height: n.h }, g);
+      el('text', { class: 't', x: n.x + 12, y: n.y + 25 }, g, n.title);
+      n.lines.forEach(function (ln, i) { el('text', { class: 'b', x: n.x + 12, y: n.y + 47 + 16 * i }, g, ln); });
+    });
+
+    spec.edges.forEach(function (e) {
+      var p = anchor(e.from), q = anchor(e.to), pts = route(p, q);
+      el('path', { class: 'ed ' + e.kind, d: 'M' + pts.map(function (t) { return t.x + ' ' + t.y; }).join(' L'), 'marker-end': 'url(#ar-' + svgId + ')' }, edgeLayer);
+
+      var best = 0, bi = 0;
+      for (var i = 0; i < pts.length - 1; i++) {
+        var len = Math.abs(pts[i + 1].x - pts[i].x) + Math.abs(pts[i + 1].y - pts[i].y);
+        if (len > best) { best = len; bi = i; }
+      }
+      var a = pts[bi], b = pts[bi + 1], isH = Math.abs(a.y - b.y) < 1;
+      var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      var lines = wrap(e.label, isH ? 21 : 26);
+      var longest = Math.max.apply(null, lines.map(function (l) { return l.length; }));
+      var hasN = !!e.n;
+      var pw = (hasN ? 34 : 12) + longest * 6.3 + 10, ph = Math.max(28, 15 * lines.length + 12);
+      var px, py;
+      if (isH) { px = mx - pw / 2; py = my - ph - 7; }
+      else { px = (a.x > 650) ? a.x - 12 - pw : a.x + 12; py = my - ph / 2; }
+      var g = el('g', { class: 'pl ' + e.kind }, pillLayer);
+      el('rect', { class: 'box', x: px, y: py, width: pw, height: ph, rx: 6 }, g);
+      if (hasN) {
+        el('circle', { cx: px + 17, cy: py + ph / 2, r: 10 }, g);
+        el('text', { class: 'n', x: px + 17, y: py + ph / 2 + 4 }, g, e.n);
+      }
+      lines.forEach(function (ln, i) {
+        el('text', { class: 'l', x: px + (hasN ? 34 : 10), y: py + 18 + 15 * i }, g, ln);
+      });
+    });
+  }
+
+  function steps(id, list) {
+    var ol = document.getElementById(id);
+    list.forEach(function (s, i) {
+      var li = document.createElement('li');
+      li.setAttribute('data-n', s[0]);
+      var d = document.createElement('div');
+      d.innerHTML = s[1];
+      li.appendChild(d);
+      ol.appendChild(li);
+    });
+  }
+
+  render('before', {
+    rows: [
+      [{ id: 'run1', col: 0, kind: 'rm', title: 'Task node', text: 'The run reaches a Task node that uses the whatsapp-update-approval form, then waits for the task\'s answer.' },
+       { id: 'ts', col: 1, kind: 'same', title: 'Task service', text: 'Creates one Operator Task for this run, node and incident.' }],
+      [{ id: 'panel', col: 2, kind: 'rm', title: 'Approval panel', text: 'The dispatcher opens the task, reads the proposed WhatsApp text, edits or comments on it, then approves or rejects.' }],
+      [{ id: 'gate', col: 1, kind: 'chg', title: 'Send gate', text: 'Stores the proposal versions and the one decision. Built around the WhatsApp message of an incident.' }],
+      [{ id: 'ans', col: 1, kind: 'rm', title: 'Task answer hand-over', text: 'Gives the decision to the task-answer service as the form\'s answer, which signals the run.' },
+       { id: 'run2', col: 0, kind: 'same', title: 'Run continues', text: 'The run gets the task answer and carries on.' }],
+      [{ id: 'gs', col: 1, kind: 'rm', title: 'Gate queues the send', text: 'Only after the answer is accepted, puts a send command in its outbox.' },
+       { id: 'ver', col: 3, kind: 'same', title: 'Notifications: verify', text: 'Takes the command from the queue and checks the approval with the gate before storing the message.' }],
+      [{ id: 'send', col: 3, kind: 'same', title: 'Send to app group', text: 'Sends the stored message to the team\'s field-app group.' },
+       { id: 'blind', col: 0, kind: 'note', title: 'Run is blind', text: 'The run never learns whether the message arrived. Only a dispatcher can look it up.' }]
+    ],
+    edges: [
+      { from: 'run1.r', to: 'ts.l', n: '1', kind: 'rm', label: 'Create the task (POST /tasks)' },
+      { from: 'run1.b', to: 'run2.t', kind: 'rm', label: 'The run waits for the task answer' },
+      { from: 'ts.r', to: 'panel.t', n: '2', kind: 'rm', label: 'Task appears for the dispatcher' },
+      { from: 'panel.l', to: 'gate.t', n: '3', kind: 'rm', label: 'Dispatcher reviews the proposed text, then approves or rejects it (whatsapp-message routes)' },
+      { from: 'gate.b', to: 'ans.t', n: '4', kind: 'rm', label: 'Approve or reject becomes the form answer' },
+      { from: 'ans.l', to: 'run2.r', n: '5', kind: 'rm', label: 'Answer delivered to the run' },
+      { from: 'ans.b', to: 'gs.t', n: '6', kind: 'rm', label: 'Only once the answer is accepted' },
+      { from: 'gs.r', to: 'ver.l', n: '7', kind: 'rm', label: 'Send command on the Service Bus queue (city.notifications.send.v1)' },
+      { from: 'ver.b', to: 'send.t', n: '8', kind: 'same', label: 'Approval verified, message stored, then sent' }
+    ]
+  });
+
+  render('after', {
+    rows: [
+      [{ id: 'run1', col: 0, kind: 'new', title: 'Notify node', text: 'Settings: roles, a message template, automatic or needs approval. A role\'s message goes to the team\'s field-app group (stand-in).' },
+       { id: 'gate', col: 1, kind: 'chg', title: 'Send gate', text: 'The existing gate, now also used by Notify. Keeps the proposed text, one decision and the approval record Notifications checks.' }],
+      [{ id: 'nobody', col: 0, kind: 'new', title: 'No one to notify', text: 'No one holds the role: nothing is sent, the incident log says so, and the path continues to next.' },
+       { id: 'auto', col: 1, kind: 'new', title: 'Automatic approval', text: 'The system approves at once and is recorded as the decider. No person is involved.' },
+       { id: 'step', col: 2, kind: 'new', title: 'Approval step', text: 'A dispatcher reads the proposed text and approves or rejects it. Replaces the WhatsApp form and panel.' }],
+      [{ id: 'rej', col: 0, kind: 'new', title: 'Rejected', text: 'The message is not sent and this path ends.' },
+       { id: 'dec', col: 1, kind: 'chg', title: 'Decision', text: 'Approved or rejected is stored once and tells the waiting run. The gate no longer queues the send.' }],
+      [{ id: 'send', col: 0, kind: 'new', title: 'Run sends', text: 'Approved: the run asks Notifications to send, once per recipient, with an Idempotency Key, then waits for the result.' },
+       { id: 'rm', col: 2, kind: 'rm', title: 'Removed', text: 'The WhatsApp approval form, its Dispatcher panel, and their contract and seed entries.' }],
+      [{ id: 'ver', col: 3, kind: 'same', title: 'Notifications: verify', text: 'Checks the approval with the gate, stores the message and answers 202: stored, not delivered.' }],
+      [{ id: 'clean', col: 1, kind: 'new', title: 'Closure cleanup', text: 'If the incident closes while a message waits for approval, the proposal is cancelled and never sent.' },
+       { id: 'sendapp', col: 3, kind: 'same', title: 'Send to app group', text: 'Delivers the stored message to the team\'s field-app group.' }],
+      [{ id: 'outcome', col: 0, kind: 'new', title: 'Outcome to run', text: 'The Workflow Engine signals the run. A failed send is recorded per recipient and the path continues. If no event arrives, an operator can deliver it by hand.' },
+       { id: 'compl', col: 3, kind: 'new', title: 'Completion event', text: 'Notifications publishes city.notification.completed.v1: sent or failed, a reason code and the key.' }]
+    ],
+    edges: [
+      { from: 'run1.r', to: 'gate.l', n: '1', kind: 'new', label: 'Propose the message, filled from the incident' },
+      { from: 'run1.b', to: 'nobody.t', n: '1b', kind: 'new', label: 'The role has no holder' },
+      { from: 'gate.b', to: 'auto.t', n: '2a', kind: 'new', label: 'Mode: automatic' },
+      { from: 'gate.r', to: 'step.t', n: '2b', kind: 'new', label: 'Mode: needs approval, waits with no deadline' },
+      { from: 'auto.b', to: 'dec.t', n: '3a', kind: 'new', label: 'System approves at once' },
+      { from: 'step.b', to: 'dec.r', n: '3b', kind: 'new', label: 'Dispatcher approves or rejects' },
+      { from: 'dec.l', to: 'rej.r', n: '4a', kind: 'new', label: 'Rejected' },
+      { from: 'dec.b', to: 'send.r', n: '4b', kind: 'new', label: 'Approved: the run is answered and goes on to send' },
+      { from: 'send.b', to: 'ver.l', n: '5', kind: 'new', label: 'POST /send with the approval reference and key. Answer: 202' },
+      { from: 'ver.b', to: 'sendapp.t', n: '6', kind: 'same', label: 'Message stored, then sent' },
+      { from: 'sendapp.b', to: 'compl.t', n: '7', kind: 'new', label: 'Sent or failed' },
+      { from: 'compl.l', to: 'outcome.r', n: '8', kind: 'new', label: 'Engine finds the run by the key and signals it' }
+    ]
+  });
+
+  steps('before-steps', [
+    ['1', 'The run reaches a Task node that uses the <code>whatsapp-update-approval</code> form. The worker asks the task service to create an Operator Task (<code>POST /tasks</code>) and waits.'],
+    ['2', 'The task appears for the dispatcher, with the approval panel in the Dispatcher app.'],
+    ['3', 'The dispatcher reads the proposed WhatsApp text and may edit it or comment on it. Then they approve or reject it: that choice is "the decision", stored once in the send gate. Proposal, comments and decision all use the <code>whatsapp-message</code> routes.'],
+    ['4', 'The decision is also the form\'s answer: the gate hands it to the task-answer service, which admits it with IMS and records it.'],
+    ['5', 'The answer is delivered to the run and the run continues. That is all the run ever learns about the message.'],
+    ['6', 'Only after the answer is accepted, the gate adds a send command to its outbox.'],
+    ['7', 'The command travels on the Service Bus queue <code>city.notifications.send.v1</code> to Notifications.'],
+    ['8', 'Notifications checks the approval with the gate, stores the message and sends it to the team\'s field-app group. Whether it arrived is visible only through <code>GET /send/{id}</code>.']
+  ]);
+
+  steps('after-steps', [
+    ['1', 'The run reaches the Notify node and asks the gate to propose the message. The text is filled from the incident\'s current data and the role is resolved to the team\'s field-app group. There is one message per run and node occurrence, so a retry does not duplicate it. <strong>1b:</strong> if no one holds the role, nothing is sent, the incident log says "no one to notify" and the path continues to next.'],
+    ['2', '<strong>2a, automatic:</strong> the gate records an approval by the system. <strong>2b, needs approval:</strong> the message waits for a dispatcher with no deadline (escalation is #448).'],
+    ['3', 'A dispatcher approves or rejects in the new approval step, or the system approves at once. The decision is stored once and tells the run. If the incident closes first, the proposal is cancelled and never sent.'],
+    ['4', '<strong>4a, rejected:</strong> nothing is sent and the path ends. <strong>4b, approved:</strong> the run goes on to send.'],
+    ['5', 'The run calls <code>sendMessage</code> (<code>POST /send</code>) for each recipient, carrying the approval reference and an Idempotency Key built from run, node occurrence and recipient. Notifications answers <code>202</code>: stored, not delivered. A repeat of the same key gets the same <code>202</code>.'],
+    ['6', 'Notifications verifies the approval with the gate, exactly as today, then sends to the team\'s field-app group.'],
+    ['7', 'Notifications publishes <code>city.notification.completed.v1</code> with the key, sent or failed, and a reason code with no provider text, on a Service Bus topic.'],
+    ['8', 'The Workflow Engine finds the run by the key and signals it. The run records the outcome per recipient and continues to next, even if a send failed. If no completion ever arrives, an operator can deliver it by hand (audited).']
+  ]);
+})();
+</script>

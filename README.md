@@ -5,6 +5,7 @@ Skills for [Claude Code](https://code.claude.com), published as a plugin marketp
 | Skill | What it does |
 |---|---|
 | [review-tour](plugins/review-tour/skills/review-tour/SKILL.md) | Review a code change in the order it runs, as a guided tour in VS Code with real diffs |
+| [flow-diff](plugins/flow-diff/skills/flow-diff/SKILL.md) | Draw a before/after flow diff of a design change as swimlane diagrams, to approve before any code is written |
 
 ## Install
 
@@ -13,6 +14,7 @@ In Claude Code:
 ```
 /plugin marketplace add Arturblum/skills
 /plugin install review-tour@arturblum-skills
+/plugin install flow-diff@arturblum-skills
 ```
 
 Then run `/review-tour:review-tour` in the repository you want to review. It only runs when you
