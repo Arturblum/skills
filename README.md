@@ -6,6 +6,7 @@ Skills for [Claude Code](https://code.claude.com), published as a plugin marketp
 |---|---|
 | [review-tour](plugins/review-tour/skills/review-tour/SKILL.md) | Review a code change in the order it runs, as a guided tour in VS Code with real diffs |
 | [flow-diff](plugins/flow-diff/skills/flow-diff/SKILL.md) | Draw a before/after flow diff of a design change as swimlane diagrams, to approve before any code is written |
+| [issue-check](plugins/issue-check/skills/issue-check/SKILL.md) | Check a GitHub issue before work starts: feasibility, blockers in the code and in open issues, whether the description is current and the issue still relevant |
 
 ## Install
 
@@ -15,6 +16,7 @@ In Claude Code:
 /plugin marketplace add Arturblum/skills
 /plugin install review-tour@arturblum-skills
 /plugin install flow-diff@arturblum-skills
+/plugin install issue-check@arturblum-skills
 ```
 
 Then run `/review-tour:review-tour` in the repository you want to review. It only runs when you
@@ -75,6 +77,25 @@ Run the skill in a repository, and it will:
 
 **Don't commit from the review copy.** Its base is the base branch, not yours. Make changes on
 your real branch.
+
+## issue-check
+
+Give Claude an issue link or number and ask whether it can be implemented. Claude can start it on
+its own from that kind of question, and it only reads: it changes nothing on the issue until you
+say so. It will:
+
+1. Read the issue and its comments, and list every **claim** the code can confirm or refute: files,
+   routes and fields named, behaviour called current, each acceptance criterion.
+2. Check each claim against the default branch and mark it **holds**, **stale**, **wrong** or
+   **unverifiable**, with `path:line` evidence.
+3. Check **relevance**: already done, partly done, superseded or obsolete, from the git log, PRs
+   and the repo's decision records.
+4. Hunt **blockers** in the code (missing prerequisites, conflicts with decisions) and in open
+   issues and PRs (blocks, overlaps, duplicates).
+5. Give a verdict (ready, ready after update, blocked, not relevant) and a proposed description
+   as before and after, then ask whether to update the issue.
+
+Needs the [GitHub CLI](https://cli.github.com) (`gh`), signed in.
 
 ## Licence
 

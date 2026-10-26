@@ -14,6 +14,11 @@
       "name": "flow-diff",
       "source": "./plugins/flow-diff",
       "description": "Draw a before/after flow diff of a design change as swimlane diagrams: new, changed, removed and unchanged parts in colour, every arrow labelled and numbered, every box explained."
+    },
+    {
+      "name": "issue-check",
+      "source": "./plugins/issue-check",
+      "description": "Check a GitHub issue before work starts: can it be implemented, what blocks it in the code or in open issues and PRs, is the description current, is it still relevant."
     }
   ]
 }
