@@ -1,0 +1,9 @@
+{
+  "name": "explain-issue",
+  "description": "Explain a GitHub issue in plain words, with context from the code and the ADRs: the ask, why it exists as a concrete timeline, where it lands in the code, what is decided, what is still open, how to start.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Arturblum"
+  },
+  "license": "MIT"
+}

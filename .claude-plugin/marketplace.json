@@ -19,6 +19,11 @@
       "name": "issue-check",
       "source": "./plugins/issue-check",
       "description": "Check a GitHub issue before work starts: can it be implemented, what blocks it in the code or in open issues and PRs, is the description current, is it still relevant."
+    },
+    {
+      "name": "explain-issue",
+      "source": "./plugins/explain-issue",
+      "description": "Explain a GitHub issue in plain words, with context from the code and the ADRs: the ask, why it exists as a concrete timeline, where it lands in the code, what is decided, what is still open, how to start."
     }
   ]
 }

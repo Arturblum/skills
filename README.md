@@ -7,6 +7,7 @@ Skills for [Claude Code](https://code.claude.com), published as a plugin marketp
 | [review-tour](plugins/review-tour/skills/review-tour/SKILL.md) | Review a code change in the order it runs, as a guided tour in VS Code with real diffs |
 | [flow-diff](plugins/flow-diff/skills/flow-diff/SKILL.md) | Draw a before/after flow diff of a design change as swimlane diagrams, to approve before any code is written |
 | [issue-check](plugins/issue-check/skills/issue-check/SKILL.md) | Check a GitHub issue before work starts: feasibility, blockers in the code and in open issues, whether the description is current and the issue still relevant |
+| [explain-issue](plugins/explain-issue/skills/explain-issue/SKILL.md) | Explain a GitHub issue in plain words, with context from the code and the ADRs, so you understand it fast |
 
 ## Install
 
@@ -17,6 +18,7 @@ In Claude Code:
 /plugin install review-tour@arturblum-skills
 /plugin install flow-diff@arturblum-skills
 /plugin install issue-check@arturblum-skills
+/plugin install explain-issue@arturblum-skills
 ```
 
 Then run `/review-tour:review-tour` in the repository you want to review. It only runs when you
@@ -94,6 +96,24 @@ say so. It will:
    issues and PRs (blocks, overlaps, duplicates).
 5. Give a verdict (ready, ready after update, blocked, not relevant) and a proposed description
    as before and after, then ask whether to update the issue.
+
+Needs the [GitHub CLI](https://cli.github.com) (`gh`), signed in.
+
+## explain-issue
+
+Give Claude an issue link or number and ask it to explain the task. Claude can start it on its own
+from that kind of request, and it only reads. It works in the vocabulary of
+[mattpocock/skills](https://github.com/mattpocock/skills): the glossary (`knowledge/CONTEXT.md`),
+ADRs, seams, tracer bullets and the frontier. It will:
+
+1. Read the issue, its comments, its spec or map, its sibling tickets and its blockers.
+2. Look up the glossary terms and ADRs in the area, and locate the code the issue names.
+3. Check the issue's "today it does X" claims against the code, and say where they disagree.
+4. Explain, on about one screen: the ask in one sentence; why it exists as a timeline with real
+   system names and example times, plus an analogy; where it lands in the code; what the ADRs
+   already decided; what is still open, with the cost of each option and a recommendation; and how
+   to start, as the thinnest slice first.
+5. Offer `/grill-with-docs` for the open question, or `/issue-check` if the issue looks stale.
 
 Needs the [GitHub CLI](https://cli.github.com) (`gh`), signed in.
 
