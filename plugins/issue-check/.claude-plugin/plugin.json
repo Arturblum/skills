@@ -1,7 +1,7 @@
 {
   "name": "issue-check",
   "description": "Check a GitHub issue before work starts: can it be implemented, what blocks it in the code or in open issues and PRs, is the description current, is it still relevant.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "Arturblum"
   },
