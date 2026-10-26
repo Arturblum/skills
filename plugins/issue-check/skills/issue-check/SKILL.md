@@ -53,4 +53,7 @@ Lead with the verdict and the one-sentence reason. Then:
 - **Relevance**: the step 4 conclusion with its evidence.
 - **Proposed description**: only the changed parts, as before and after, so the user can approve the edit. Say "description is current" when step 7 found no drift.
 
-End by asking whether to update the issue, comment, or relabel it, and offer `/rewrite-issue-after-check` for the description. Apply nothing before the answer.
+End with the next step, and apply nothing before the answer:
+
+- When step 7 found drift (any `stale` or `wrong` claim, a decision buried in comments, a missing criterion) or the report names open design choices, suggest `/rewrite-issue-after-check`. It is user-invoked, so name it for the user to run; it carries these findings into the issue.
+- When the description is current, ask only whether to comment or relabel the issue.
