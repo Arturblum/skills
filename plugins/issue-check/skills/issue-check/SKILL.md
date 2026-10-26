@@ -53,4 +53,4 @@ Lead with the verdict and the one-sentence reason. Then:
 - **Relevance**: the step 4 conclusion with its evidence.
 - **Proposed description**: only the changed parts, as before and after, so the user can approve the edit. Say "description is current" when step 7 found no drift.
 
-End by asking whether to update the issue, comment, or relabel it. Apply nothing before the answer.
+End by asking whether to update the issue, comment, or relabel it, and offer `/rewrite-issue-after-check` for the description. Apply nothing before the answer.

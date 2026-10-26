@@ -1,0 +1,9 @@
+{
+  "name": "rewrite-issue-after-check",
+  "description": "Rewrite a GitHub issue's description from the findings of issue-check, and write the still-open design decisions into it. Shows the before and after and asks before it edits.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Arturblum"
+  },
+  "license": "MIT"
+}

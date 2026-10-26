@@ -24,6 +24,11 @@
       "name": "explain-issue",
       "source": "./plugins/explain-issue",
       "description": "Explain a GitHub issue in plain words, with context from the code and the ADRs: the ask, why it exists as a concrete timeline, where it lands in the code, what is decided, what is still open, how to start."
+    },
+    {
+      "name": "rewrite-issue-after-check",
+      "source": "./plugins/rewrite-issue-after-check",
+      "description": "Rewrite a GitHub issue's description from the findings of issue-check, and write the still-open design decisions into it. Shows the before and after and asks before it edits."
     }
   ]
 }

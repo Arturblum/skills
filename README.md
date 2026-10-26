@@ -8,6 +8,7 @@ Skills for [Claude Code](https://code.claude.com), published as a plugin marketp
 | [flow-diff](plugins/flow-diff/skills/flow-diff/SKILL.md) | Draw a before/after flow diff of a design change as swimlane diagrams, to approve before any code is written |
 | [issue-check](plugins/issue-check/skills/issue-check/SKILL.md) | Check a GitHub issue before work starts: feasibility, blockers in the code and in open issues, whether the description is current and the issue still relevant |
 | [explain-issue](plugins/explain-issue/skills/explain-issue/SKILL.md) | Explain a GitHub issue in plain words, with context from the code and the ADRs, so you understand it fast |
+| [rewrite-issue-after-check](plugins/rewrite-issue-after-check/skills/rewrite-issue-after-check/SKILL.md) | Rewrite an issue's description from the findings of issue-check, with the still-open design decisions written into it |
 
 ## Install
 
@@ -19,6 +20,7 @@ In Claude Code:
 /plugin install flow-diff@arturblum-skills
 /plugin install issue-check@arturblum-skills
 /plugin install explain-issue@arturblum-skills
+/plugin install rewrite-issue-after-check@arturblum-skills
 ```
 
 Then run `/review-tour:review-tour` in the repository you want to review. It only runs when you
@@ -114,6 +116,23 @@ ADRs, seams, tracer bullets and the frontier. It will:
    already decided; what is still open, with the cost of each option and a recommendation; and how
    to start, as the thinnest slice first.
 5. Offer `/grill-with-docs` for the open question, or `/issue-check` if the issue looks stale.
+
+Needs the [GitHub CLI](https://cli.github.com) (`gh`), signed in.
+
+## rewrite-issue-after-check
+
+Run it after `issue-check`, as `/rewrite-issue-after-check:rewrite-issue-after-check <issue>`. It
+only runs when you ask for it, because it edits a shared issue. It will:
+
+1. Take the `issue-check` findings from the conversation, or run `issue-check` first.
+2. Draft a new description that changes only what a finding requires: stale or wrong claims fixed
+   with the verified fact, decisions that lived only in comments folded in, missing acceptance
+   criteria and blockers added.
+3. Add an `## Open decisions` section: each question in plain words, the options with their cost,
+   a recommendation, and the code or ADR that bears on it. They stay open for the decider.
+4. Show the before and after, and ask. Nothing is written before you say yes.
+5. Save the old body to a file, edit the issue, and post one comment listing what changed. Titles,
+   labels, assignees and state stay as they are.
 
 Needs the [GitHub CLI](https://cli.github.com) (`gh`), signed in.
 
