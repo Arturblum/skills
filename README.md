@@ -8,6 +8,7 @@ Skills for [Claude Code](https://code.claude.com), published as a plugin marketp
 | [flow-diff](plugins/flow-diff/skills/flow-diff/SKILL.md) | Draw a before/after flow diff of a design change as swimlane diagrams, to approve before any code is written |
 | [issue-check](plugins/issue-check/skills/issue-check/SKILL.md) | Check a GitHub issue before work starts: feasibility, blockers in the code and in open issues, whether the description is current and the issue still relevant |
 | [explain-issue](plugins/explain-issue/skills/explain-issue/SKILL.md) | Explain a GitHub issue in plain words, with context from the code, the ADRs and the issues it links to, so you understand it without follow-up questions |
+| [explain-decision](plugins/explain-decision/skills/explain-decision/SKILL.md) | Explain a decision you have to make in plain words: each option with its context and cost, a recommendation, and the one line to answer with |
 | [rewrite-issue-after-check](plugins/rewrite-issue-after-check/skills/rewrite-issue-after-check/SKILL.md) | Rewrite an issue's description from the findings of issue-check, with the still-open design decisions written into it |
 
 ## Install
@@ -20,6 +21,7 @@ In Claude Code:
 /plugin install flow-diff@arturblum-skills
 /plugin install issue-check@arturblum-skills
 /plugin install explain-issue@arturblum-skills
+/plugin install explain-decision@arturblum-skills
 /plugin install rewrite-issue-after-check@arturblum-skills
 ```
 
@@ -121,6 +123,23 @@ ADRs, seams, tracer bullets and the frontier. It will:
 6. Offer `/grill-with-docs` for the open question, or `/issue-check` if the issue looks stale.
 
 Needs the [GitHub CLI](https://cli.github.com) (`gh`), signed in.
+
+## explain-decision
+
+Ask Claude to explain a decision, from an issue's open questions or from an `explain-issue` or
+`issue-check` report in the conversation: "explain decision 2", "what do these options mean".
+Claude can start it on its own from that kind of request, and it only reads. For each decision it will:
+
+1. Gather the facts: the issue and what it links to, the glossary, the ADRs in the area and the code
+   each option touches.
+2. Explain, on about one screen: the question in one sentence; what is stuck until it is answered;
+   the facts every option shares; each option with what it means, what happens to the same example,
+   what it wins and costs, and which ADR it follows or breaks; and a recommendation.
+3. Reread the draft as someone who forgot the project, and answer each question that reader would
+   ask next.
+4. End with the one line to reply with, so you can answer in a word and Claude carries on.
+
+Needs the [GitHub CLI](https://cli.github.com) (`gh`), signed in, when the decision lives in an issue.
 
 ## rewrite-issue-after-check
 

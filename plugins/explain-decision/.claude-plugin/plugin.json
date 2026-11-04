@@ -1,0 +1,9 @@
+{
+  "name": "explain-decision",
+  "description": "Explain a decision you have to make, in plain words: the question, why it needs an answer now, each option with its context and cost, a recommendation, and the one line to reply with.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Arturblum"
+  },
+  "license": "MIT"
+}

@@ -26,6 +26,11 @@
       "description": "Explain a GitHub issue in plain words, with context from the code, the ADRs and the issues it links to, self-contained so you need no follow-up questions: the ask, why it exists as a concrete timeline, where it lands in the code, what is decided, what is still open, how to start."
     },
     {
+      "name": "explain-decision",
+      "source": "./plugins/explain-decision",
+      "description": "Explain a decision you have to make, in plain words: the question, why it needs an answer now, each option with its context and cost, a recommendation, and the one line to reply with."
+    },
+    {
       "name": "rewrite-issue-after-check",
       "source": "./plugins/rewrite-issue-after-check",
       "description": "Rewrite a GitHub issue's description from the findings of issue-check, and write the still-open design decisions into it. Shows the before and after and asks before it edits."
