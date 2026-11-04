@@ -1,7 +1,7 @@
 {
   "name": "explain-issue",
-  "description": "Explain a GitHub issue in plain words, with context from the code and the ADRs: the ask, why it exists as a concrete timeline, where it lands in the code, what is decided, what is still open, how to start.",
-  "version": "1.0.0",
+  "description": "Explain a GitHub issue in plain words, with context from the code, the ADRs and the issues it links to, self-contained so you need no follow-up questions: the ask, why it exists as a concrete timeline, where it lands in the code, what is decided, what is still open, how to start.",
+  "version": "1.1.0",
   "author": {
     "name": "Arturblum"
   },
