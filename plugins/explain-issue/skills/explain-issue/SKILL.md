@@ -14,8 +14,8 @@ Read-only: explain, and leave the issue and the repo as they are.
 1. **Read the issue and everything it points to.** `gh issue view <n> --comments`, then the **spec** or map it belongs to, its sibling tickets, its blockers (GitHub's native dependencies, `gh api repos/<owner>/<repo>/issues/<n>/dependencies/blocked_by`) and linked PRs. Comments often supersede the body: read them as part of the issue. Then open every issue, PR, ADR and doc the text names by number or link, and write one line on each: what it is, and what it decided or did.
    Done when you can state the goal, the acceptance criteria and every change the comments made, and every reference has its line.
 
-2. **Ground it in the repo's own language.** Read the domain docs the repo keeps: glossary, ADR folder, AGENTS.md / CLAUDE.md (`knowledge/CONTEXT.md` and `knowledge/adr/` in the Matt Pocock layout; `setup-matt-pocock-skills` records where).
-   - **Glossary**: every domain term the issue uses, with its definition, so you speak the project's _ubiquitous language_ and avoid the synonyms the glossary rules out.
+2. **Ground it in the repo's own language.** Read the domain docs the repo keeps: glossary, ADR folder, AGENTS.md / CLAUDE.md (`knowledge/CONTEXT.md` and `knowledge/adr/` in the Matt Pocock layout; `setup-matt-pocock-skills` records where). If the repo has a `GLOSSARY-MAP.md`, follow it to the glossary for the area the issue touches.
+   - **Glossary**: every domain term the issue uses, with its definition, so you speak the project's _ubiquitous language_ and avoid the synonyms the glossary rules out. When the repo has several glossaries, take each term from the glossary of its own context. When one word is defined in two contexts, note both meanings and say which one the issue means.
    - **ADRs** in the area: each decision, the alternative it rejected, and its status; only `accepted` ones bind.
    - **Code**: where the issue's files, types, routes and events live and what they do today. Quote `path:line`.
 
@@ -40,8 +40,9 @@ Read-only: explain, and leave the issue and the repo as they are.
 
 ## Style
 
-- Short sentences. Everyday words first; the project's term second, in brackets, when it differs.
-- Say what a thing does, then its name: "the task service (it creates and assigns tasks)".
+- Short sentences: 25 words or fewer, one idea each. Active voice, present tense. No idioms. One analogy (section 2) is the only figurative language.
+- Use the glossary term every time, and never a synonym: one word, one meaning. At its first mention, define it in half a sentence from the glossary: "the task service (it creates and assigns tasks)". A term the glossary lacks: say so, and give your own definition.
+- Everyday words for everything else. Do not rename a glossary term into everyday words.
 - Real names and example values: `task service`, `10:00`, `sensor 12`. Mark a value you made up as an example.
 - A pointer (`path:line`, `ADR 0051`, `#123`) follows a plain statement of what it says; the reader opens it only for more detail.
 - Aim for one screen. A definition the reader needs outranks the length.

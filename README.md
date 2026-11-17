@@ -112,7 +112,8 @@ ADRs, seams, tracer bullets and the frontier. It will:
 
 1. Read the issue, its comments, its spec or map, its sibling tickets and its blockers, and open every
    issue, PR, ADR and doc it mentions.
-2. Look up the glossary terms and ADRs in the area, and locate the code the issue names.
+2. Look up the glossary terms and ADRs in the area (following `GLOSSARY-MAP.md` to the right
+   glossary when the repo has several), and locate the code the issue names.
 3. Check the issue's "today it does X" claims against the code, and say where they disagree.
 4. Explain, on about one screen: the ask in one sentence; why it exists as a timeline with real
    system names and example times, plus an analogy; where it lands in the code; what the ADRs
@@ -120,6 +121,7 @@ ADRs, seams, tracer bullets and the frontier. It will:
    to start, as the thinnest slice first.
 5. Reread the draft as someone who forgot the project, and answer each question that reader would
    ask next, so every term, ticket and ADR is defined where it first appears.
+   It writes in short sentences and uses each glossary term the same way every time, never a synonym.
 6. Offer `/grill-with-docs` for the open question, or `/issue-check` if the issue looks stale.
 
 Needs the [GitHub CLI](https://cli.github.com) (`gh`), signed in.
@@ -130,8 +132,8 @@ Ask Claude to explain a decision, from an issue's open questions or from an `exp
 `issue-check` report in the conversation: "explain decision 2", "what do these options mean".
 Claude can start it on its own from that kind of request, and it only reads. For each decision it will:
 
-1. Gather the facts: the issue and what it links to, the glossary, the ADRs in the area and the code
-   each option touches.
+1. Gather the facts: the issue and what it links to, the glossary (following `GLOSSARY-MAP.md` when
+   the repo has several), the ADRs in the area and the code each option touches.
 2. Explain, on about one screen: the question in one sentence; what is stuck until it is answered;
    the facts every option shares; each option with what it means, what happens to the same example,
    what it wins and costs, and which ADR it follows or breaks; and a recommendation.

@@ -15,6 +15,7 @@ Read-only: explain, and leave the issue and the repo as they are. The choice bel
    Done when each decision is one line in your own words and every dependency between decisions is noted.
 
 2. **Gather the facts each option stands on.** For each decision, read the issue and everything it points to (linked issues, PRs, specs), the glossary, the ADRs in the area (only `accepted` ones bind), and the code the options touch. Quote `path:line`.
+   If the repo has a `GLOSSARY-MAP.md`, follow it to the glossary for the area the decision touches. When the repo has several glossaries, take each term from the glossary of its own context. When one word is defined in two contexts, note both meanings and say which one the decision means.
    For each option, find: what changes in the code and where; which ADR it follows or breaks; what it costs now; what it makes harder or easier later, and how hard it is to undo.
    Done when every option has all four, and every domain term, ticket and ADR you will mention has a definition in half a sentence.
 
@@ -40,8 +41,9 @@ Read-only: explain, and leave the issue and the repo as they are. The choice bel
 
 ## Style
 
-- Short sentences. Everyday words first; the project's term second, in brackets, when it differs.
-- Say what a thing does, then its name: "the task service (it creates and assigns tasks)".
+- Short sentences: 25 words or fewer, one idea each. Active voice, present tense. No idioms or other figurative language.
+- Use the glossary term every time, and never a synonym: one word, one meaning. At its first mention, define it in half a sentence from the glossary: "the task service (it creates and assigns tasks)". A term the glossary lacks: say so, and give your own definition.
+- Everyday words for everything else. Do not rename a glossary term into everyday words.
 - Real names and example values. Mark a value you made up as an example.
 - Give every option the same shape and the same example, so the reader compares like with like.
 - A pointer (`path:line`, `ADR 0051`, `#123`) follows a plain statement of what it says; the reader opens it only for more detail.
